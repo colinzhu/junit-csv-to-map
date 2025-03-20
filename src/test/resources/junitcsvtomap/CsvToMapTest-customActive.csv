@@ -1,0 +1,4 @@
+active,value,note
+true,value1,This record should be included
+false,value2,This record should be excluded
+true,value3,This record should be included

@@ -1,0 +1,4 @@
+isActive,type,nullableField,note
+true,null,null,This field should be null
+true,empty,"",This field should be empty
+true,value,value,This field should have a value
