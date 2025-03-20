@@ -13,6 +13,36 @@ A JUnit 5 extension that allows loading test data from CSV files and converting 
 ## Usage
 
 ### Basic Usage
+The first row of your CSV file should contain column names, which will become the keys in the Map:
+
+Note: only isActive=true rows will be included in the test.
+```csv
+isActive,input,expected,description
+true,value1,result1,test case 1
+true,value2,result2,test case 2
+false,value3,result3,test case 3
+```
+
+```java
+@ParameterizedTest
+@CsvToMapFileSource(file = "/path/to/test-data.csv")
+void testWithCsvFile(Map<String, String> testData, String desc, String expected) {
+    // Use testData in your test
+    String input = testData.get("input");
+    String expected = testData.get("expected");
+    
+    assertEquals(expected, myService.process(input));
+}
+```
+
+
+### Define extra columns as parameters
+```csv
+isActive,input,expected,description
+true,value1,result1,test case 1
+true,value2,result2,test case 2
+false,value3,result3,test case 3
+```
 
 ```java
 @ParameterizedTest
@@ -20,18 +50,28 @@ A JUnit 5 extension that allows loading test data from CSV files and converting 
 void testWithCsvFile(Map<String, String> testData, String desc, String expected) {
     // Use testData in your test
     String input = testData.get("input");
-    String expected = testData.get("expected");
     
     assertEquals(expected, myService.process(input), desc);
 }
 ```
 
-### CSV File Format
-
-The first row of your CSV file should contain column names, which will become the keys in the Map:
+### Filter data sets
+For below example, only dataSet 'A' and 'B' rows will be included in the test.
 ```csv
-isActive,input,expected,description
-true,value1,result1,test case 1
-true,value2,result2,test case 2
-false,value3,result3,test case 3
+isActive,dataSet,input,expected,description
+true,A,value1,result1,test case 1
+true,B,value2,result2,test case 2
+false,C,value3,result3,test case 3
+```
+
+```java
+@ParameterizedTest
+@CsvToMapFileSource(file = "/path/to/test-data.csv", dataSet = {"A", "B"})
+void testWithCsvFile(Map<String, String> testData) {
+    // Use testData in your test
+    String input = testData.get("input");
+    String expected = testData.get("expected");
+    
+    assertEquals(expected, myService.process(input));
+}
 ```
